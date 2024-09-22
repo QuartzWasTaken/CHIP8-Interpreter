@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/oCHIP.dir/CHIP8.cpp.o CMakeFiles/oCHIP.dir/opcodes.cpp.o -o oCHIP 
