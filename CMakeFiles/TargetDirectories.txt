@@ -1,3 +1,0 @@
-/home/gab/projects/CHIP8/CMakeFiles/oCHIP.dir
-/home/gab/projects/CHIP8/CMakeFiles/edit_cache.dir
-/home/gab/projects/CHIP8/CMakeFiles/rebuild_cache.dir
