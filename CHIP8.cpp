@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <string.h>
-#include "opcodes.h"
+#include "include/opcodes.h"
 
 // Le jeu s'exécute de 0x200 à 0x1FF
 
@@ -36,6 +36,7 @@ WORD GetNextOpcode() // Chercher la prochaine instruction à exécuter
     res = m_GameMemory[m_ProgramCounter]; // Dans res charger la première moitié de l'opcode, localisé dans la mémoire à l'addresse de m_ProgramCounter : 0xAB
     res <<= 8; // Shift res de 8 à gauche (rajouter 00 à la fin) : 0xAB00
     res |= m_GameMemory[m_ProgramCounter+1]; // Rajouter la deuxième moitié de l'opcode 0xABCD
+    m_ProgramCounter += 2; // Faire avancer le pointeur d'instructions
     return res; // On a notre opcode, on peut le return
 }
 
@@ -45,15 +46,19 @@ void ExecuteOpcode()
 
     switch(opcode & 0xF000)
     {
-        case 0x1000:
-            Opcode1NNN(opcode); // Gérer les opcodes commençant par 1
-            break;
 
         case 0x0000:
             break;
 
+        case 0x1000:
+            Opcode1NNN(opcode); // Gérer les opcodes commençant par 1
+            break;
+
         case 0x2000:
             Opcode2NNN(opcode);
+
+        case 0x6000:
+            Opcode6XNN(opcode);
         default: // Opcode pas encore pris en charge
             break;
     }
@@ -63,16 +68,14 @@ int main()
 {
     CPUReset();
     printf("Le CPU a été réinitialisé\n");
-    printf("m_ProgramCounter = %d\n",  m_ProgramCounter);
-    printf("opcode = %d\n",  opcode);
-    for(double lV = 0; lV <= 50; lV++)
+    printf("m_ProgramCounter = %#06x\n",  m_ProgramCounter);
+    printf("opcode = %#06x\n",  opcode);
+    for(int lV = 0; lV < 500; lV++)
     {
-        printf("i = %d\n");
-        std::cout << GetNextOpcode() << std::endl;
+        printf("i = %d\n", lV);
+        printf("m_ProgramCounter = %#06x\n-------------------------\n",  m_ProgramCounter);
+        printf("opcode boucle = %#06x\n", opcode);
         ExecuteOpcode();
-        printf("m_ProgramCounter = %d\n",  m_ProgramCounter);
-        printf("opcode boucle = %d\n", opcode);
-        printf("Nouveau build");
     }
     
     return 0;
